@@ -37,6 +37,17 @@ public class Main {
     }
   }
 
+  static void mostrarGrafo(IGrafo g) {
+    System.out.println("--- Grafo gerado (" + g.tipo() + ") ---");
+    System.out.print("Vértices: ");
+    for (Vertice v : g.vertices())
+      System.out.print(v + " ");
+    System.out.println("\nArestas: " + g.numeroArestas());
+    for (Aresta e : g.arestas())
+      System.out.println("  " + e);
+    System.out.println("--- Resultado ---");
+  }
+
   static void demo() throws Exception {
     IGrafo gd = new GrafoLista(6, TipoGrafo.DIRIGIDO);
     gd.adicionarAresta(0, 1, 5);
@@ -68,37 +79,36 @@ public class Main {
     System.out.println(
         "1 BFS  2 DFS  3 Topológica  4 Kruskal  5 Prim  6 Bellman-Ford  7 Dijkstra  8 Floyd-Warshall  9 Ford-Fulkerson");
     int op = lerInt();
-    IGrafo g;
-    long ini;
+    if (op < 1 || op > 9)
+      return;
+    IGrafo g = (op == 4 || op == 5) ? mst : (op == 9) ? fluxo : dag;
+    mostrarGrafo(g);
     switch (op) {
       case 1:
       case 2:
-        g = dag;
         System.out.println((op == 1 ? Algoritmos.bfs(g, 0) : Algoritmos.dfs(g, 0)));
         break;
       case 3:
-        System.out.println(Algoritmos.ordenacaoTopologica(dag));
+        System.out.println(Algoritmos.ordenacaoTopologica(g));
         break;
       case 4:
-        System.out.println(Algoritmos.kruskal(mst));
+        System.out.println(Algoritmos.kruskal(g));
         break;
       case 5:
-        System.out.println(Algoritmos.prim(mst, 0));
+        System.out.println(Algoritmos.prim(g, 0));
         break;
       case 6:
-        System.out.println(Arrays.toString(Algoritmos.bellmanFord(dag, 0)));
+        System.out.println(Arrays.toString(Algoritmos.bellmanFord(g, 0)));
         break;
       case 7:
-        System.out.println(Arrays.toString(Algoritmos.dijkstra(dag, 0)));
+        System.out.println(Arrays.toString(Algoritmos.dijkstra(g, 0)));
         break;
       case 8:
-        System.out.println(Arrays.deepToString(Algoritmos.floydWarshall(dag)));
+        System.out.println(Arrays.deepToString(Algoritmos.floydWarshall(g)));
         break;
       case 9:
-        System.out.println("Fluxo máximo: " + Algoritmos.fordFulkerson(fluxo, 0, 5));
+        System.out.println("Fluxo máximo: " + Algoritmos.fordFulkerson(g, 0, 5));
         break;
-      default:
-        return;
     }
   }
 
